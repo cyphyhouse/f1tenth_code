@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/catkin_ws/install
+
+Name: collada_urdf
+Description: Description of collada_urdf
+Version: 1.12.5
+Cflags: -I/home/ubuntu/catkin_ws/install/include
+Libs: -L/home/ubuntu/catkin_ws/install/lib -lcollada_urdf
+Requires: angles collada_parser resource_retriever urdf geometric_shapes tf

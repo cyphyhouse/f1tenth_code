@@ -1,0 +1,2 @@
+beginner_tutorials:cs431demo:race:robot_model/collada_parser:robot_model/collada_urdf:robot_model/joint_state_publisher:robot_model/kdl_parser:robot_model/kdl_parser_py:robot_model/robot_model:robot_model/urdf:robot_model/urdf_parser_plugin:week1tutorial:zed-ros-wrapper-master
+-DCATKIN_DEVEL_PREFIX=/home/ubuntu/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/ubuntu/catkin_ws/install -G Unix Makefiles

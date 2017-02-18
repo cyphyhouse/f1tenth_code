@@ -1,0 +1,158 @@
+/**********************************
+**Using ZED with OpenCV
+**********************************/
+ 
+#include <iostream>
+#include <vector>
+
+// OpenCV
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+ 
+// ZED
+#include <zed/Camera.hpp>
+
+// ROS
+#include <ros/ros.h>
+
+// Input from keyboard
+char keyboard = ' ';
+
+// Global vars
+int radius_error = 0;
+int center_error = 0;
+ 
+int main(int argc, char** argv){
+	// Initialize static parameters
+	int hueMinValue = 8/2;
+	int hueMaxValue = 14/2;
+	int satMinValue = 100;
+	int satMaxValue = 255;
+	int volMinValue = 50;
+	int volMaxValue = 255;
+    
+
+	// Initialize ZED color stream in HD and depth in Performance mode
+	sl::zed::Camera* zed = new sl::zed::Camera(sl::zed::HD720);
+	sl::zed::InitParams params;
+	sl::zed::ERRCODE err = zed->init(params);
+	 
+	// Quit if an error occurred
+	if (err != sl::zed::SUCCESS) {
+		std::cout << "Unable to init the ZED:" << errcode2str(err) << std::endl;
+		delete zed;
+		return 1;
+	}
+	 
+	// Initialize color image and depth
+	int width = zed->getImageSize().width;
+	int height = zed->getImageSize().height;
+	cv::Mat image(height, width, CV_8UC4,1);
+	cv::Mat thresh_image(height, width, CV_8UC4,1);
+	 
+	// Create OpenCV windows
+	cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
+	cv::namedWindow("Threshold Image", cv::WINDOW_AUTOSIZE);
+	 
+	// Settings for windows
+	cv::Size displaySize(720, 404);
+	cv::Mat imageDisplay(displaySize, CV_8UC4);
+	cv::Mat depthDisplay(displaySize, CV_8UC4);
+
+	// Set up color thresholding values
+	//cv::Scalar min(hueMinValue, satMinValue, volMinValue);
+	//cv::Scalar max(hueMaxValue, satMaxValue, volMaxValue);
+	
+
+	// Set up reference object
+	cv::Point2i ref_center(573,374);
+	int ref_radius = 120;
+	float minTargetRadius = 80;
+	 
+	// Loop until 'q' is pressed
+	while (keyboard != 'q') {
+	//for(int i=0;i<1;i++){
+		// Grab frame and compute depth in FILL sensing mode
+		if (!zed->grab(sl::zed::SENSING_MODE::FILL)){
+			// Retrieve left color image
+			sl::zed::Mat left = zed->retrieveImage(sl::zed::SIDE::LEFT);
+			memcpy(image.data,left.data,width*height*4*sizeof(uchar));
+			
+			// Convert RGB to HSV
+			cv::Mat HSV_image(height, width, CV_8UC4,1);
+			cv::cvtColor(image,HSV_image,cv::COLOR_BGR2HSV);
+
+			// Create threshold frame of the image
+			cv::Mat threshold_frame(height, width, CV_8UC4,1);
+			cv::inRange(HSV_image, cv::Scalar(hueMinValue, satMinValue, volMinValue), cv::Scalar(hueMaxValue, satMaxValue, volMaxValue), threshold_frame);
+
+			// Filter out extra noise
+			cv::Mat str_el = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+			morphologyEx(threshold_frame, threshold_frame, cv::MORPH_OPEN, str_el);
+			morphologyEx(threshold_frame, threshold_frame, cv::MORPH_CLOSE, str_el);
+
+			// Get circle around object
+			cv::vector<cv::vector<cv::Point> > contours;
+			cv::vector<cv::Vec4i> hierarchy;
+			cv::vector<cv::Point2i> center;
+			cv::vector<int> radius;
+			cv::findContours(threshold_frame.clone(), contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_NONE);
+ 
+			size_t count = contours.size();
+			 
+			for(int i=0; i<count; i++){
+			    cv::Point2f c;
+			    float r;
+			    cv::minEnclosingCircle(contours[i], c, r);
+			 
+			    if (r >= minTargetRadius){
+			        center.push_back(c);
+			        radius.push_back(r);
+			    }
+			}
+
+			count = center.size();
+			//cv::Scalar red(255,0,0);
+
+			//cv::vector<cv::Mat> hsv_channels(3);
+			//cv::split(threshold_frame,hsv_channels);
+			//cv::Mat obj_outline(height, width, CV_8UC1,1);
+			//obj_outline = hsv_channels[2];
+			//cv::cvtColor(threshold_frame,obj_outline,cv::COLOR_HSV2GRAY);
+			for(int i = 0; i < count; i++){
+			    cv::circle(threshold_frame, center[i], radius[i], cv::Scalar(255,0,0), 3);
+			}
+
+			// // Retrieve depth map
+			//  sl::zed::Mat depthmap = zed->normalizeMeasure(sl::zed::MEASURE::DEPTH);
+			//  memcpy(depth.data,depthmap.data,width*height*4*sizeof(uchar));
+			 
+			// Display image in OpenCV window
+			cv::resize(image, imageDisplay, displaySize);
+			cv::imshow("Image", imageDisplay);
+			//cv::imwrite("zed_image.jpg",imageDisplay);
+			
+			// Display filtered image in OpenCV window
+			cv::resize(threshold_frame, depthDisplay, displaySize);
+			cv::imshow("Threshold Image", depthDisplay);
+
+			// Display point values
+			for(int i=0; i<count; i++){
+				std::cout << "center = " << center[i] << " and radius = " << radius[i] << "\r";
+			}
+			if (keyboard == 'c'){
+				cv::imwrite("zed_image.jpg",imageDisplay);
+				for(int i=0; i<count; i++){
+					std::cout << "center = " << center[i] << std::endl;
+					std::cout << "radius = " << radius[i] << std::endl;
+				}
+				break;		
+			}
+		}
+	keyboard = cv::waitKey(30);	 
+	}
+	 
+	delete zed;
+ 
+}

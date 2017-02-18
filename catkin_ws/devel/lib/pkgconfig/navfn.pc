@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/catkin_ws/devel
+
+Name: navfn
+Description: Description of navfn
+Version: 1.12.13
+Cflags: -I/home/ubuntu/catkin_ws/devel/include -I/home/ubuntu/catkin_ws/src/navigation/navfn/include
+Libs: -L/home/ubuntu/catkin_ws/devel/lib -lnavfn
+Requires: nav_core roscpp pluginlib

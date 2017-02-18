@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/catkin_ws/devel
+
+Name: kdl_parser_py
+Description: Description of kdl_parser_py
+Version: 1.12.5
+Cflags: 
+Libs: -L/home/ubuntu/catkin_ws/devel/lib -lkdl_parser_py
+Requires: urdf

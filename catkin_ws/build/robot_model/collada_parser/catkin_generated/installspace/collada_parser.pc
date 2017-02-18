@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/catkin_ws/install
+
+Name: collada_parser
+Description: Description of collada_parser
+Version: 1.12.5
+Cflags: -I/home/ubuntu/catkin_ws/install/include -I/usr/include
+Libs: -L/home/ubuntu/catkin_ws/install/lib -lcollada_parser
+Requires: roscpp urdf_parser_plugin
