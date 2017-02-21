@@ -1,75 +1,78 @@
-#!/usr/bin/env python
+import pygame as pg
+import sys
 
-import rospy
-from race.msg import drive_param  # import the custom message
-import curses
-import pygame
-from pygame.locals import *
+# import rospy
+# from race.msg import drive_param  # import the custom message
 
-forward = 9780
-left = 0
 
-stdscr = curses.initscr()
-curses.cbreak()
-stdscr.keypad(1)
-rospy.init_node('keyboard_talker', anonymous=True)
-pub = rospy.Publisher('drive_parameters', drive_param, queue_size=10)
+CLOCK_TICK = 100  # frames per second: number of messages we wish to publish per sec
+STOP = 9780
+MAX_SPEED_VEC = 10080
+MIN_SPEED_VEC = 9480
+DELTA_DIRECTION = 10  # TODO experimental value. check for validity
+DELTA_SPEED = 300  # TODO experimental value. check for validity
 
-stdscr.refresh()
 
-key = ''
-stdscr.addstr(2, 20, "Neutral")
-stdscr.addstr(3, 20, "Cntr")
-stdscr.addstr(5, 20, "    ")
+def drive():
+    pg.display.set_mode((400, 300))
+    # rospy.init_node('keyboard_talker', anonymous=True)
+    # pub = rospy.Publisher('drive_parameters', drive_param, queue_size=10)
+    pg.init()
+    clock = pg.time.Clock()
+    speed = STOP
+    direction = 0
+    # states of keys: 0 indicates up, 1 is down.
+    kUp = kDown = kLeft = kRight = 0
+    run = True
+    down = False
+    while run:
+        # reset values
+        speed = STOP
+        direction = 0
+        terminate = False
+        # stall here
+        clock.tick(CLOCK_TICK)
+        for event in pg.event.get():
+            # no elifs
+            # just care about the keydown&keyup events
+            if event.type == pg.KEYDOWN or event.type == pg.KEYUP:
+                # print(event)
+                key = event.key
+                down = int(event.type == pg.KEYDOWN)
+                if key == pg.K_LEFT:
+                    # once the execution reaches here, we know sth happened to left.
+                    # set to 1 if it's a keydown, 0 o/w.
+                    kLeft = down
+                if key == pg.K_RIGHT:
+                    kRight = down
+                if key == pg.K_UP:
+                    kUp = down
+                if key == pg.K_DOWN:
+                    kDown = down
+                if key == pg.K_q:
+                    terminate = True
 
-while key != ord('q'):
-    key = stdscr.getch()
-    stdscr.refresh()
+        # msg = drive_param()
+        # reset speed & direction accordingly.
+        if terminate:
+            # msg.velocity = STOP
+            # msg.angle = 0
+            # pub.publish(msg)
+            return
 
-    # fill in the conditions to increment/decrement throttle/steer
-    forward = 9780  # reset forward value because it is now an impulse thrust not continuous
+        speed += DELTA_SPEED * (kUp - kDown)
+        direction += DELTA_DIRECTION * (kRight - kLeft)
+        # msg.velocity = speed
+        # msg.angle = direction
+        # print(kUp, kDown, kLeft, kRight)
+        print(speed, direction)
+        sys.stdout.flush()
+        # pub.publish(msg)
 
-    if key == curses.KEY_UP:
-        forward = forward + 300 if forward < 10080 else 10080
-        stdscr.addstr(2, 20, "Forward")
-        # forward = forward + 1 if forward < 20 else 20;
-        # stdscr.addstr(2, 20, "Up  ")
-        # stdscr.addstr(2, 25, '%.2f' % forward)
-        stdscr.addstr(5, 20, "    ")
-    elif key == curses.KEY_DOWN:
-        forward = forward - 300 if forward > 9480 else 9480
-        stdscr.addstr(2, 20, "Reverse")
-        # forward = forward - 1 if forward > -20 else -20;
-        # stdscr.addstr(2, 20, "Down")
-        # stdscr.addstr(2, 25, '%.2f' % forward)
-        stdscr.addstr(5, 20, "    ")
-    if key == curses.KEY_LEFT:
-        left = left - 1 if left > -10 else -10
-        stdscr.addstr(3, 20, "left")
-        stdscr.addstr(3, 25, '%.2f' % left)
-        stdscr.addstr(5, 20, "    ")
-    elif key == curses.KEY_RIGHT:
-        left = left + 1 if left < 10 else 10
-        stdscr.addstr(3, 20, "rgt ")
-        stdscr.addstr(3, 25, '%.2f' % left)
-        stdscr.addstr(5, 20, "    ")
 
-    if forward == 9780:
-        stdscr.addstr(2, 20, "Neutral")
-        stdscr.addstr(5, 20, "    ")
+def main():
+    drive()
 
-    if key == curses.KEY_BACKSPACE:
-        left = 0
-        forward = 9780
-        stdscr.addstr(2, 20, "Neutral")
-        stdscr.addstr(3, 20, "Cntr")
-        stdscr.addstr(5, 20, "Stop")
 
-    msg = drive_param()
-    msg.velocity = forward
+main()
 
-    msg.angle = left
-
-    pub.publish(msg)
-
-curses.endwin()
