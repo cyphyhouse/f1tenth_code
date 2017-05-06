@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <param name="/use_sim_time" value="false"/>
+
+  <node name="amcl" pkg="amcl" type="amcl" />
+
+  <node pkg="tf" type="static_transform_publisher" name="map_odom" args="0.0 0.0 0.0 0.0 0.0 0.0 /map /odom 10" />
+
+  <node pkg="tf" type="static_transform_publisher" name="odom_base_link" args="0.0 0.0 0.0 0.0 0.0 0.0 /odom /base_link 10" />
+
+  <node pkg="tf" type="static_transform_publisher" name="base_link_laser" args="0.0 0.0 0.0 0.0 0.0 0.0 /base_link /laser 10" />
+
+  <node pkg="rviz" type="rviz" name="rviz" />
+
+
+</launch>
