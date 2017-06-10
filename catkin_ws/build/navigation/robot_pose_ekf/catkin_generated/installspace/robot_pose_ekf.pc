@@ -1,8 +1,0 @@
-prefix=/home/ubuntu/catkin_ws/install
-
-Name: robot_pose_ekf
-Description: Description of robot_pose_ekf
-Version: 1.12.13
-Cflags: -I/home/ubuntu/catkin_ws/install/include
-Libs: -L/home/ubuntu/catkin_ws/install/lib 
-Requires: roscpp

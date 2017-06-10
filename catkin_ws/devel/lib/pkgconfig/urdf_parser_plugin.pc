@@ -1,8 +1,0 @@
-prefix=/home/ubuntu/catkin_ws/devel
-
-Name: urdf_parser_plugin
-Description: Description of urdf_parser_plugin
-Version: 1.12.5
-Cflags: -I/home/ubuntu/catkin_ws/src/robot_model/urdf_parser_plugin/include -I/usr/include
-Libs: -L/home/ubuntu/catkin_ws/devel/lib 
-Requires: 

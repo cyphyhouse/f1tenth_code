@@ -1,8 +1,0 @@
-prefix=/home/ubuntu/catkin_ws/install
-
-Name: map_server
-Description: Description of map_server
-Version: 1.12.13
-Cflags: -I/home/ubuntu/catkin_ws/install/include
-Libs: -L/home/ubuntu/catkin_ws/install/lib -limage_loader
-Requires: roscpp tf nav_msgs
