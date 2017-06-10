@@ -12,7 +12,6 @@ def publish_position(pose_data):
 	pub.publish(pose_data)
 		
 
-
 # Subscribes node to the topic /imu which has msgs of type 
 # sensor_msgs/Imu messages being published on it via the imu
 def get_imu_messages():
@@ -22,7 +21,6 @@ def get_imu_messages():
 
 # Uses the equations of motion to get position of the robot
 def get_position():
-	
 	pose_data = geometry_msgs.msgs.PoseWithCovarianceStamped()
 	
 	# s = ut + 1/2at^2
@@ -35,12 +33,12 @@ def get_position():
 	
 	# Magnetometer needs to be incorporated here to measure turn 
       
-      	pose_data[3] = Imu.angular_velocity[0]*rate
+        pose_data[3] = Imu.angular_velocity[0]*rate
       	pose_data[4] = Imu.angular_velocity[1]*rate
       	pose_data[5] = 0
-
-	# Same thing for theta using angular velocity
+	
 	publish_position(pose_data)
+	
 	
 if __name__ == '__main__':
 	try:
