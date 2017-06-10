@@ -24,6 +24,9 @@ def get_imu_messages():
 def get_position():
 	pose_data = geometry_msgs.msgs.PoseWithCovarianceStamped()
 	
+	# the time difference between receiving two msgs
+	rate = 0.5	
+
 	# s = ut + 1/2at^2
 	# to get linear velocity, we use linear acceleration
 	ux = Imu.linear_acceleration_covariance[0]*rate
