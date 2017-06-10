@@ -16,6 +16,7 @@ def publish_position(pose_data):
 # sensor_msgs/Imu messages being published on it via the imu
 def get_imu_messages():
 	rospy.Subscriber('imu', sensor_msgs.msgs.Imu, get_position)
+	rospy.sleep(0.5)
 	rospy.spin()
 
 
