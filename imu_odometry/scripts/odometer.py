@@ -24,7 +24,7 @@ def get_imu_messages():
 def get_position():
 	
 	pose_data = geometry_msgs.msgs.PoseWithCovarianceStamped()
-
+	
 	# s = ut + 1/2at^2
 	# to get linear velocity, we use linear acceleration
 	ux = Imu.linear_acceleration_covariance[0]*rate
@@ -32,6 +32,12 @@ def get_position():
 	pose_data[0] = ux*rate + 0.5*Imu.linear_acceleration_covariance[0]*rate*rate
 	pose_data[1] = uy*rate + 0.5*Imu.linear_acceleration_covariance[1]*rate*rate
 	pose_data[2] = 0
+	
+	# Magnetometer needs to be incorporated here to measure turn 
+      
+      	pose_data[3] = Imu.angular_velocity[0]*rate
+      	pose_data[4] = Imu.angular_velocity[1]*rate
+      	pose_data[5] = 0
 
 	# Same thing for theta using angular velocity
 	publish_position(pose_data)
