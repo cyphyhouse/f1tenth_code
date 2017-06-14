@@ -7,15 +7,16 @@
 MPU9250_DMP imu;
 
 ros::NodeHandle nh;
+sensor_msgs::Imu my_msg;
 
+ros::Publisher pos_pub("imu0", &my_msg);
 
 // Need to publish to topic /imu0 
 // Data type is sensor_msgs/Imu
 
-
 void setup() {
   
-  sensor_msgs::Imu my_msg;
+  
   SerialPort.begin(115200);
 
   // Call imu.begin() to verify communication and initialize
@@ -41,8 +42,7 @@ void setup() {
                DMP_FEATURE_GYRO_CAL,
                10);
   nh.initNode();
-  ros::Publisher pos_pub = nh.advertise<sensor_msgs::Imu>(
-      "imu0", 1000);
+  nh.advertise(pos_pub);
   
 }
 
@@ -58,7 +58,7 @@ void loop() {
        imu.computeEulerAngles();
        createMsgQuaternion();
        createMsgAngVelAndLinAcc();
-       pub.publish(my_msg);
+       pos_pub.publish(&my_msg);
      }
   }
   nh.spinOnce();
@@ -97,4 +97,3 @@ void createMsgAngVelAndLinAcc(void) {
     my_msg.angular_velocity.z = gyroZ;
     
 }
-
