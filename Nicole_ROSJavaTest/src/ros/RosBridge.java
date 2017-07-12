@@ -62,7 +62,7 @@ public class RosBridge {
 	protected final CountDownLatch closeLatch;
 	protected Session session;
 
-	protected Map<String, RosBridgeSubscriber> listeners = new ConcurrentHashMap<String, RosBridge.RosBridgeSubscriber>();
+	protected Map<String, RosBridgeSubscriber> listeners = new ConcurrentHashMap<String, RosBridge.RosBridgeSubscriber>(); // NICOLE MADE PUBLIC FROM PROTECTED
 	protected Set<String> publishedTopics = new HashSet<String>();
 
 	protected Map<String, FragmentManager> fragementManagers = new HashMap<String, FragmentManager>();
@@ -73,7 +73,14 @@ public class RosBridge {
 
 	/*** NICOLE'S ADDITION ***/
 	public ArrayList<Boolean> msgRxFlags = new ArrayList<Boolean>();
+	// public JsonNode inputNode = null;
+
+	public JsonNode getJsonNode(String topic){
+		return this.listeners.get(topic).inputNode;
+	}
+
     /*** END NEW SHIT ***/
+
 
 	/**
 	 * Creates a default RosBridge and connects it to the ROS Bridge websocket server located at rosBridgeURI.
@@ -241,7 +248,7 @@ public class RosBridge {
 					String topic = node.get("topic").asText();
 					RosBridgeSubscriber subscriber = this.listeners.get(topic);
 					if(subscriber != null){
-						subscriber.receive(node, msg, this.msgRxFlags); // NICOLE ADDED this.msgRxFlags
+						subscriber.inputNode = subscriber.receive(node, msg, this.msgRxFlags); // NICOLE ADDED this.msgRxFlags
 					}
 				}
 				else if(op.equals("fragment")){
@@ -650,7 +657,10 @@ public class RosBridge {
 	 */
 	public static class RosBridgeSubscriber{
 
-		protected List<RosListenDelegate> delegates = new CopyOnWriteArrayList<RosListenDelegate>();
+		protected List<RosListenDelegate> delegates = new CopyOnWriteArrayList<RosListenDelegate>(); 
+		/*** NICOLE'S ADDITION ***/
+		public JsonNode inputNode = null;
+	    /*** END NEW SHIT ***/
 
 		public RosBridgeSubscriber() {
 		}
@@ -687,10 +697,13 @@ public class RosBridge {
 		 * @param data the {@link com.fasterxml.jackson.databind.JsonNode} containing the JSON data received.
 		 * @param stringRep the string representation of the JSON object.
 		 */
-		public void receive(JsonNode data, String stringRep, ArrayList<Boolean> flags){ // NICOLE ADDED FLAGS
+		public JsonNode receive(JsonNode data, String stringRep, ArrayList<Boolean> flags){ // NICOLE ADDED FLAGS
 			for(RosListenDelegate delegate : delegates){
 				delegate.receive(data, stringRep, flags); // NICOLE ADDED FLAGS
 			}
+			JsonNode node = null;
+			node = data;
+			return node;
 		}
 
 		/**

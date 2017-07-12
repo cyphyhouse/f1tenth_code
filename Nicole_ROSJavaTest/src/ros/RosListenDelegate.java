@@ -43,7 +43,7 @@ public interface RosListenDelegate {
 	 * @param data the {@link com.fasterxml.jackson.databind.JsonNode} containing the JSON data received.
 	 * @param stringRep the string representation of the JSON object.
 	 */
-	void receive(JsonNode data, String stringRep, ArrayList<Boolean> flags); // NICOLE ADDED PUB
+	JsonNode receive(JsonNode data, String stringRep, ArrayList<Boolean> flags); // NICOLE ADDED PUB
 
 
 	/**

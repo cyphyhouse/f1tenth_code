@@ -44,8 +44,10 @@ public class RosTest {
                       .setQueueLength(1),
                 new RosListenDelegate() {
 
-                      public void receive(JsonNode data, String stringRep, ArrayList<Boolean> flags) {
-                            flags.set(0,true);                         
+                      public JsonNode receive(JsonNode data, String stringRep, ArrayList<Boolean> flags) {
+                            // TODO: prevent deadlocks
+                            flags.set(0,true); 
+                            return data;                        
                       }
                 }
         );
@@ -56,13 +58,14 @@ public class RosTest {
                     .setQueueLength(1),
                 new RosListenDelegate() {
 
-                    public void receive(JsonNode data, String stringRep, ArrayList<Boolean> flags) {
+                    public JsonNode receive(JsonNode data, String stringRep, ArrayList<Boolean> flags) {
                         flags.set(1,true); 
+                        return data;
                     }
                 }
         );
 
-        // Publisher pub = new Publisher("/turtleX/cmd_vel", "geometry_msgs/Twist", bridge);
+        Publisher pub = new Publisher("/turtleX/cmd_vel", "geometry_msgs/Twist", bridge);
 
         // switch(key_msg.data){
         //     case 1: pub.publish(new Twist(new Vector3(1,0,0),new Vector3(0,0,0))); // Up key
@@ -78,7 +81,20 @@ public class RosTest {
         //     e.printStackTrace();
         // }
         while(true){
+            if(bridge.msgRxFlags.get(0)){
+                // Do callback for first subscriber
+                JsonNode data = bridge.getJsonNode("/keyboard_input");
+                bridge.msgRxFlags.set(0,false);
 
+                MessageUnpacker<PrimitiveMsg<Integer>> unpacker = new MessageUnpacker<PrimitiveMsg<Integer>>(PrimitiveMsg.class);
+                PrimitiveMsg<Integer> key_msg = unpacker.unpackRosMessage(data);
+
+                System.out.println("Keyboard input: " + key_msg.data);
+            }
+            if(bridge.msgRxFlags.get(1)){
+                // Do callback for second subscriber
+                bridge.msgRxFlags.set(1,false);
+            }
         }
     }
 
