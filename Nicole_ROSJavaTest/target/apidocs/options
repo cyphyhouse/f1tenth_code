@@ -1,0 +1,24 @@
+-classpath
+'/Users/nicolechan/Dropbox/School/Research/ROS_Java_transport/repo/target/classes:/Users/nicolechan/.m2/repository/org/eclipse/jetty/websocket/websocket-client/9.4.3.v20170317/websocket-client-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/websocket/websocket-server/9.4.3.v20170317/websocket-server-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/websocket/websocket-servlet/9.4.3.v20170317/websocket-servlet-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/jetty-server/9.4.3.v20170317/jetty-server-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/jetty-io/9.4.3.v20170317/jetty-io-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/jetty-servlet/9.4.3.v20170317/jetty-servlet-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/jetty-security/9.4.3.v20170317/jetty-security-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/jetty-http/9.4.3.v20170317/jetty-http-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/websocket/websocket-api/9.4.3.v20170317/websocket-api-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.2.3/jackson-databind-2.2.3.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/websocket/websocket-common/9.4.3.v20170317/websocket-common-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.2.3/jackson-annotations-2.2.3.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/jetty-client/9.4.3.v20170317/jetty-client-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar:/Users/nicolechan/.m2/repository/org/eclipse/jetty/jetty-util/9.4.3.v20170317/jetty-util-9.4.3.v20170317.jar:/Users/nicolechan/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.2.3/jackson-core-2.2.3.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'/Users/nicolechan/Dropbox/School/Research/ROS_Java_transport/repo/src'
+-author
+-bottom
+'Copyright &#169; 2017. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/nicolechan/Dropbox/School/Research/ROS_Java_transport/repo/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'java_rosbridge 2.0.2 API'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' '/Users/nicolechan/Dropbox/School/Research/ROS_Java_transport/repo/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'java_rosbridge 2.0.2 API'
