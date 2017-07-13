@@ -36,9 +36,7 @@ public class RosTest {
         bridge.connect(args[0], true);
 
         // Now need to add each subscriber to the arraylist of flags (maybe can be done in constructor)
-        //bridge.msgRxFlags.addAll(Arrays.asList(new Boolean[2]));
-	bridge.msgRxFlags.add(false);
-	bridge.msgRxFlags.add(false);
+        bridge.msgRxFlags.addAll(Arrays.asList(new Boolean[2]));
 
         bridge.subscribe(SubscriptionRequestMsg.generate("/keyboard_input")
                       .setType("std_msgs/Int32")
