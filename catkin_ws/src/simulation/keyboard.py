@@ -55,7 +55,6 @@ def simulate():
                 k_down = down
             elif (event.key == K_q) or (event.key == K_ESCAPE):
                 play = False
-                
 
         keys = (k_up, k_down, k_left, k_right)
         screen.fill(BACKGROUND)

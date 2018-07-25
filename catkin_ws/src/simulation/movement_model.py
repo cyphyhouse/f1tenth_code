@@ -70,7 +70,7 @@ def get_max_turn_speed(df):
 
 
 def main():
-    filename = 'data/car_f1_inertia.csv'
+    filename = 'data/car_f1_acceleration 2.csv'
     df = get_data(filename)
     plt.plot(df['vel'])
     plt.show()
